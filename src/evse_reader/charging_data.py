@@ -2,9 +2,9 @@ import calendar
 from datetime import datetime, timedelta
 from flask import Blueprint, current_app
 
-from evse_crawler.db import get_db
+from evse_reader.db import get_db
 
-from evse_crawler.refresh_charging_data import (
+from evse_reader.refresh_charging_data import (
     refresh_charging_data,
 )
 

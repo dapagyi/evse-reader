@@ -18,4 +18,4 @@ ADD . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked
 
-CMD ["uv", "run", "gunicorn", "-w", "2", "src.evse_crawler:create_app()"]
+CMD ["uv", "run", "gunicorn", "-w", "2", "src.evse_reader:create_app()"]
