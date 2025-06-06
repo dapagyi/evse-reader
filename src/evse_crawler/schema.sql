@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS charging;
+
+CREATE TABLE charging (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  charge_number_internal INTEGER NOT NULL UNIQUE,
+  charge_type TEXT NOT NULL, 
+  start_time DATETIME NOT NULL,
+  end_time DATETIME NOT NULL,
+  energy_kWh REAL NOT NULL,
+  duration TEXT NOT NULL,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+)
