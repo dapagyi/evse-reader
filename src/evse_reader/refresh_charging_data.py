@@ -64,16 +64,18 @@ def load_charging_data_into_db(db: sqlite3.Connection) -> None:
             (
                 int(row["CDR_ID"]),
                 row["Type of charge"],
-                row["Start_Datetime"],
-                row["End_Datetime"],
+                # row["Start_Datetime"],
+                # row["End_Datetime"],
+                row["Start_Datetime"].strftime("%Y-%m-%d %H:%M:%S"),
+                row["End_Datetime"].strftime("%Y-%m-%d %H:%M:%S"),
                 row["Energy_kWh"],
+                # duration maradhat stringben: "HH:MM:SS"
                 row["Duration"].strftime("%H:%M:%S")
                 if isinstance(row["Duration"], datetime.time)
                 else str(row["Duration"]),
             ),
         )
-
-    now = datetime.datetime.now().isoformat()
+    now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     db.execute(
         """
         INSERT INTO app_state (key, value)
