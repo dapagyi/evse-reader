@@ -1,8 +1,11 @@
 services:
   web:
+    container_name: evse_reader
     build: .
     ports:
-      - "3030:3030"
+      - "3030:8000"
+    environment:
+      - FLASK_ENV=production
     env_file: .env
     volumes:
       - ./container-data:/app/instance

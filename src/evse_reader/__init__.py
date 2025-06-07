@@ -17,11 +17,6 @@ def create_app():
     except OSError:
         pass
 
-    @app.route("/hello")
-    def hello():
-        name = os.getenv("USERNAME", "World")
-        return f"Hello, {name}!"
-
     from . import db
 
     db.init_app(app)

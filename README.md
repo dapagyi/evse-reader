@@ -1,12 +1,11 @@
 # evse-reader
 
 ## dev
-```
-uv run flask --app src.evse-reader init-db
-uv run flask --app src.evse-reader run --debug
+```sh
+./run.sh
 ```
 
 ## prod
-```
+```sh
 docker compose up -d
 ```
