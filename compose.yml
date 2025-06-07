@@ -9,3 +9,11 @@ services:
     env_file: .env
     volumes:
       - ./container-data:/app/instance
+    
+    # Optional:
+    networks:
+      - caddy_network
+
+networks:
+  caddy_network:
+    external: true
