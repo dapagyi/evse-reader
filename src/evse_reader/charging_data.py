@@ -26,6 +26,12 @@ def _refresh_charging_data():
     return {}
 
 
+def convert_duration_to_timedelta(duration_str):
+    """Convert a duration string in 'HH:MM:SS' format to a timedelta object."""
+    hours, minutes, seconds = list(map(int, duration_str.split(":")))
+    return timedelta(hours=hours, minutes=minutes, seconds=seconds)
+
+
 @bp.route("/results")
 def get_charging_data_from_db():
     db = get_db()
@@ -33,7 +39,7 @@ def get_charging_data_from_db():
     # Get the most recent 3 sessions
     rows = db.execute(
         """
-        SELECT start_time, end_time, energy_kWh
+        SELECT start_time, end_time, duration, energy_kWh
         FROM charging
         ORDER BY start_time DESC
         LIMIT 3
@@ -45,7 +51,14 @@ def get_charging_data_from_db():
             {
                 "start_datetime": row[0],
                 "end_datetime": row[1],
-                "energy_kwh": row[2],
+                "duration": row[2],
+                "energy_kwh": row[3],
+                "average_power_kw": (
+                    row[3]
+                    / (convert_duration_to_timedelta(row[2]).total_seconds() / 3600)
+                    if row[2]
+                    else 0.0
+                ),
             }
             for row in rows
         ]
