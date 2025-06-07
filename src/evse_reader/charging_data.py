@@ -16,9 +16,9 @@ bp = Blueprint(
 
 @bp.route("/refresh-charging-data")
 def _refresh_charging_data():
-    base_url = current_app.config["EVSE_BASE_URL"]
-    username = current_app.config["EVSE_USERNAME"]
-    password = current_app.config["EVSE_PASSWORD"]
+    base_url = current_app.config["BASE_URL"]
+    username = current_app.config["USERNAME"]
+    password = current_app.config["PASSWORD"]
 
     db = get_db()
     refresh_charging_data(db, base_url, username, password)

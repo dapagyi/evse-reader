@@ -1,5 +1,8 @@
 import os
 from flask import Flask
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def create_app():
@@ -7,7 +10,7 @@ def create_app():
     app.config.from_mapping(
         DATABASE=os.path.join(app.instance_path, "db.sqlite"),
     )
-    app.config.from_pyfile("settings.py", silent=True)
+    app.config.from_prefixed_env(prefix="EVSE")
 
     try:
         os.makedirs(app.instance_path)
