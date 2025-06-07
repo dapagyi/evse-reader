@@ -30,24 +30,27 @@ def _refresh_charging_data():
 def get_charging_data_from_db():
     db = get_db()
 
-    # Get the most recent session
-    row = db.execute(
+    # Get the most recent 3 sessions
+    rows = db.execute(
         """
         SELECT start_time, end_time, energy_kWh
         FROM charging
         ORDER BY start_time DESC
-        LIMIT 1
+        LIMIT 3
         """
-    ).fetchone()
+    ).fetchall()
 
-    last_session = (
-        {
-            "start_datetime": row[0],
-            "end_datetime": row[1],
-            "energy_kwh": row[2],
-        }
-        if row
-        else None
+    last_sessions = (
+        [
+            {
+                "start_datetime": row[0],
+                "end_datetime": row[1],
+                "energy_kwh": row[2],
+            }
+            for row in rows
+        ]
+        if rows
+        else []
     )
 
     # Total energy
@@ -104,7 +107,7 @@ def get_charging_data_from_db():
         )
 
     return {
-        "last_session": last_session,
+        "last_sessions": last_sessions,
         "total_energy": total_energy,
         "current_month_energy": current_month_energy,
         "total_records": total_records,
