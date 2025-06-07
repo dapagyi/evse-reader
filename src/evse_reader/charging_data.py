@@ -106,10 +106,18 @@ def get_charging_data_from_db():
             {"month": start_date.strftime("%m"), "year": year, "energy_kwh": energy}
         )
 
+    last_updated = (
+        db.execute("SELECT value FROM app_state WHERE key = 'last_updated'").fetchone()[
+            0
+        ]
+        or None
+    )
+
     return {
         "last_sessions": last_sessions,
         "total_energy": total_energy,
         "current_month_energy": current_month_energy,
         "total_records": total_records,
         "last_3_months": monthly_energies,
+        "last_updated": last_updated,
     }

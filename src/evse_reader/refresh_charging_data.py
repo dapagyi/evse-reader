@@ -73,6 +73,16 @@ def load_charging_data_into_db(db: sqlite3.Connection) -> None:
             ),
         )
 
+    now = datetime.datetime.now().isoformat()
+    db.execute(
+        """
+        INSERT INTO app_state (key, value)
+        VALUES (?, ?)
+        ON CONFLICT(key) DO UPDATE SET value=excluded.value;
+        """,
+        ("last_updated", now),
+    )
+
     db.commit()
 
 

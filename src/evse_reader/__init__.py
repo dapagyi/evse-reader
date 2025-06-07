@@ -30,4 +30,22 @@ def create_app():
 
     app.register_blueprint(charging_data.bp)
 
+    @app.route("/health")
+    def health():
+        _db = db.get_db()
+        rows = _db.execute(
+            "SELECT key, value FROM app_state WHERE key IN ('creation_time', 'last_updated')"
+        ).fetchall()
+        state = {key: value for key, value in rows}
+        return {
+            "status": "ok",
+            "creation_time": state.get("creation_time"),
+            "last_updated": state.get("last_updated"),
+            "instance_path": app.instance_path,
+        }
+
+    @app.route("/")
+    def index():
+        return app.redirect("/health")
+
     return app
