@@ -1,15 +1,15 @@
 import calendar
 from datetime import datetime, timedelta
+
 from flask import Blueprint, current_app
 
-from evse_reader.db import get_db
-
-from evse_reader.refresh_charging_data import (
-    refresh_charging_data,
-)
 from evse_reader.datetime_utils import (
     convert_duration_to_timedelta,
     convert_to_local_iso,
+)
+from evse_reader.db import get_db
+from evse_reader.refresh_charging_data import (
+    refresh_charging_data,
 )
 
 bp = Blueprint(

@@ -1,6 +1,8 @@
+import contextlib
 import os
-from flask import Flask
+
 from dotenv import load_dotenv
+from flask import Flask
 
 from evse_reader.datetime_utils import convert_to_local_iso
 
@@ -14,10 +16,8 @@ def create_app():
     )
     app.config.from_prefixed_env(prefix="EVSE")
 
-    try:
+    with contextlib.suppress(OSError):
         os.makedirs(app.instance_path)
-    except OSError:
-        pass
 
     from . import db
 
@@ -33,7 +33,7 @@ def create_app():
         rows = _db.execute(
             "SELECT key, value FROM app_state WHERE key IN ('creation_time', 'last_updated')"
         ).fetchall()
-        state = {key: value for key, value in rows}
+        state = dict(rows)
         return {
             "status": "ok",
             "creation_time": convert_to_local_iso(state.get("creation_time")),
