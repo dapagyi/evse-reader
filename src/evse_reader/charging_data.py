@@ -7,6 +7,10 @@ from evse_reader.db import get_db
 from evse_reader.refresh_charging_data import (
     refresh_charging_data,
 )
+from evse_reader.datetime_utils import (
+    convert_duration_to_timedelta,
+    convert_to_local_iso,
+)
 
 bp = Blueprint(
     "charging_data",
@@ -26,12 +30,6 @@ def _refresh_charging_data():
     return {}
 
 
-def convert_duration_to_timedelta(duration_str):
-    """Convert a duration string in 'HH:MM:SS' format to a timedelta object."""
-    hours, minutes, seconds = list(map(int, duration_str.split(":")))
-    return timedelta(hours=hours, minutes=minutes, seconds=seconds)
-
-
 @bp.route("/results")
 def get_charging_data_from_db():
     db = get_db()
@@ -49,8 +47,8 @@ def get_charging_data_from_db():
     last_sessions = (
         [
             {
-                "start_datetime": row[0],
-                "end_datetime": row[1],
+                "start_datetime": convert_to_local_iso(row[0]),
+                "end_datetime": convert_to_local_iso(row[1]),
                 "duration": row[2],
                 "energy_kwh": row[3],
                 "average_power_kw": (
@@ -125,6 +123,7 @@ def get_charging_data_from_db():
         ]
         or None
     )
+    last_updated = convert_to_local_iso(last_updated) if last_updated else None
 
     return {
         "last_sessions": last_sessions,

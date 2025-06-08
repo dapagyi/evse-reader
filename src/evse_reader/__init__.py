@@ -2,6 +2,8 @@ import os
 from flask import Flask
 from dotenv import load_dotenv
 
+from evse_reader.datetime_utils import convert_to_local_iso
+
 load_dotenv()
 
 
@@ -34,8 +36,10 @@ def create_app():
         state = {key: value for key, value in rows}
         return {
             "status": "ok",
-            "creation_time": state.get("creation_time"),
-            "last_updated": state.get("last_updated"),
+            "creation_time": convert_to_local_iso(state.get("creation_time")),
+            "last_updated": convert_to_local_iso(state.get("last_updated"))
+            if state.get("last_updated")
+            else None,
             "instance_path": app.instance_path,
         }
 

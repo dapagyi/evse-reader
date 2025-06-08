@@ -9,6 +9,8 @@ services:
     env_file: .env
     volumes:
       - ./container-data:/app/instance
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     
     # Optional:
     networks:
